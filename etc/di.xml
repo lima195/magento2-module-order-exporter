@@ -1,0 +1,24 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+	<!-- Queue Grid -->
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="lima_orderexporter_queue_listing_data_source" xsi:type="string">Lima\OrderExporter\Model\ResourceModel\Queue\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+	<virtualType name="Lima\OrderExporter\Model\ResourceModel\Queue\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">order_exporter_queue</argument>
+			<argument name="resourceModel" xsi:type="string">Lima\OrderExporter\Model\ResourceModel\Queue</argument>
+		</arguments>
+	</virtualType>
+
+	<!-- Queue Api -->
+	<preference for="Lima\OrderExporter\Api\QueueManagementInterface" type="Lima\OrderExporter\Model\QueueManagement"/>
+
+    <!-- Service Contract -->
+    <preference for="Lima\OrderExporter\Api\QueueRepositoryInterface" type="Lima\OrderExporter\Model\QueueRepository" />
+    <preference for="Lima\OrderExporter\Api\Data\QueueInterface" type="Lima\OrderExporter\Model\Queue" />
+</config>

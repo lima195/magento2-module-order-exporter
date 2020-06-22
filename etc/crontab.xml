@@ -1,0 +1,7 @@
+<config>
+    <group id="default">
+        <job name="order_export_queue_run" instance="Lima\OrderExporter\Cron\QueueRun" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+    </group>
+</config>

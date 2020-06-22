@@ -1,0 +1,222 @@
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">orderexporter_queue_listing.lima_orderexporter_queue_listing_data_source</item>
+			<item name="deps" xsi:type="string">orderexporter_queue_listing.lima_orderexporter_queue_listing_data_source</item>
+		</item>
+		<item name="spinner" xsi:type="string">queue_columns</item>
+	</argument>
+
+	<!-- Data Source -->
+	<dataSource name="nameOfDataSource">
+		<argument name="dataProvider" xsi:type="configurableObject">
+			<argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+			<argument name="name" xsi:type="string">lima_orderexporter_queue_listing_data_source</argument>
+			<argument name="primaryFieldName" xsi:type="string">export_id</argument>
+			<argument name="requestFieldName" xsi:type="string">id</argument>
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+					<item name="update_url" xsi:type="url" path="mui/index/render"/>
+					<item name="storageConfig" xsi:type="array">
+						<item name="indexField" xsi:type="string">export_id</item>
+					</item>
+				</item>
+			</argument>
+		</argument>
+	</dataSource>
+
+	<!-- Container with header actions -->
+	<container name="listing_top">
+
+		<argument name="data" xsi:type="array">
+		    <item name="config" xsi:type="array">
+		        <item name="template" xsi:type="string">ui/grid/toolbar</item>
+		    </item>
+		</argument>
+
+		<!-- Component columns controls -->
+		<!-- This allow to select witch columns are displayed, not necessary here -->
+		<component name="columns_controls">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="columnsData" xsi:type="array">
+						<item name="provider" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.queue_columns</item>
+					</item>
+					<item name="component" xsi:type="string">Magento_Ui/js/grid/controls/columns</item>
+					<item name="displayArea" xsi:type="string">dataGridActions</item>
+				</item>
+			</argument>
+		</component>
+
+		<!-- Bookmark -->
+		<bookmark name="bookmarks">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="storageConfig" xsi:type="array">
+						<item name="namespace" xsi:type="string">orderexporter_queue_listing</item>
+					</item>
+				</item>
+			</argument>
+		</bookmark>
+
+		<!-- Filters -->
+		<filters name="listing_filters">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="columnsProvider" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.queue_columns</item>
+					<item name="storageConfig" xsi:type="array">
+						<item name="provider" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.listing_top.bookmarks</item>
+						<item name="namespace" xsi:type="string">current.filters</item>
+					</item>
+					<item name="childDefaults" xsi:type="array">
+						<item name="provider" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.listing_top.listing_filters</item>
+						<item name="imports" xsi:type="array">
+							<item name="visible" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.queue_columns.${ $.index }:visible</item>
+						</item>
+					</item>
+				</item>
+			</argument>
+		</filters>
+
+		<!-- Mass Action -->
+		<massaction name="listing_massaction">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="selectProvider" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.queue_columns.ids</item>
+					<item name="component" xsi:type="string">Magento_Ui/js/grid/tree-massactions</item>
+					<item name="indexField" xsi:type="string">id</item>
+				</item>
+			</argument>
+
+			<action name="delete">
+				<argument name="data" xsi:type="array">
+					<item name="config" xsi:type="array">
+						<item name="type" xsi:type="string">delete</item>
+						<item name="label" xsi:type="string" translate="true">Delete</item>
+						<item name="url" xsi:type="url" path="*/*/massDelete"/>
+						<item name="confirm" xsi:type="array">
+							<item name="title" xsi:type="string" translate="true">Delete items</item>
+							<item name="message" xsi:type="string" translate="true">Are you sure to delete?</item>
+						</item>
+					</item>
+				</argument>
+			</action>
+
+			<action name="export">
+				<argument name="data" xsi:type="array">
+					<item name="config" xsi:type="array">
+						<item name="type" xsi:type="string">export</item>
+						<item name="label" xsi:type="string" translate="true">Export</item>
+						<item name="url" xsi:type="url" path="*/*/massExport"/>
+						<item name="confirm" xsi:type="array">
+							<item name="title" xsi:type="string" translate="true">Export items</item>
+							<item name="message" xsi:type="string" translate="true">Are you sure to export?</item>
+						</item>
+					</item>
+				</argument>
+			</action>
+		</massaction>
+
+		<!-- Paging -->
+		<paging name="listing_paging">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="storageConfig" xsi:type="array">
+						<item name="provider" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.listing_top.bookmarks</item>
+						<item name="namespace" xsi:type="string">current.paging</item>
+					</item>
+					<item name="selectProvider" xsi:type="string">orderexporter_queue_listing.orderexporter_queue_listing.queue_columns.ids</item>
+				</item>
+			</argument>
+			<settings>
+		        <options>
+		            <option name="20" xsi:type="array">
+		                <item name="value" xsi:type="number">20</item>
+		                <item name="label" xsi:type="string">20</item>
+		            </option>
+		            <option name="30" xsi:type="array">
+		                <item name="value" xsi:type="number">30</item>
+		                <item name="label" xsi:type="string">30</item>
+		            </option>
+		            <option name="40" xsi:type="array">
+		                <item name="value" xsi:type="number">40</item>
+		                <item name="label" xsi:type="string">40</item>
+		            </option>
+		        </options>
+		        <pageSize>20</pageSize>
+		    </settings>
+		</paging>
+
+	</container>
+
+	<!-- Columns -->
+	<columns name="queue_columns">
+		<selectionsColumn name="ids">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="resizeEnabled" xsi:type="boolean">false</item>
+					<item name="resizeDefaultWidth" xsi:type="string">55</item>
+					<item name="indexField" xsi:type="string">export_id</item>
+				</item>
+			</argument>
+		</selectionsColumn>
+		<column name="export_id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">ID</item>
+				</item>
+			</argument>
+		</column>
+		<column name="order_id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Order ID</item>
+				</item>
+			</argument>
+		</column>
+		<column name="pending">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="label" translate="true" xsi:type="string">Pending</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="editor" xsi:type="array">
+                        <item name="editorType" xsi:type="string">select</item>
+                    </item>
+                </item>
+            </argument>
+		</column>
+		<column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">dateRange</item>
+					<item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+					<item name="dataType" xsi:type="string">date</item>
+					<item name="label" xsi:type="string" translate="true">Created</item>
+				</item>
+			</argument>
+		</column>
+		<column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">dateRange</item>
+					<item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+					<item name="dataType" xsi:type="string">date</item>
+					<item name="label" xsi:type="string" translate="true">Modified</item>
+				</item>
+			</argument>
+		</column>
+		<actionsColumn name="actions" class="Lima\OrderExporter\Ui\Component\QueueListing\Column\Actions">
+			<settings>
+				<label translate="true">Actions</label>
+			</settings>
+		</actionsColumn>
+	</columns>
+</listing>

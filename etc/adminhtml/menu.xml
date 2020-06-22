@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="Lima_OrderExporter::order_exporter"
+			 title="Order Exporter"
+			 translate="title"
+			 module="Lima_OrderExporter"
+			 parent="Magento_Sales::sales"
+			 sortOrder="50"
+			 dependsOnModule="Lima_OrderExporter"
+			 resource="Lima_OrderExporter::order_exporter" />
+			 
+		<add id="Lima_OrderExporter::queue"
+			 title="Queue"
+			 translate="title"
+			 module="Lima_OrderExporter"
+			 parent="Lima_OrderExporter::order_exporter"
+			 sortOrder="15"
+			 dependsOnModule="Lima_OrderExporter"
+			 action="orderexporter/queue"
+			 resource="Lima_OrderExporter::queue" />
+
+		<add id="Lima_OrderExporter::configuration"
+             title="Configuration"
+			 translate="title"
+             module="Lima_OrderExporter"
+             parent="Lima_OrderExporter::order_exporter"
+             sortOrder="20"
+			 dependsOnModule="Lima_OrderExporter"
+             action="adminhtml/system_config/edit/section/order_exporter"
+             resource="Lima_OrderExporter::configuration" />
+	</menu>
+</config>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<order_exporter>
+			<general>
+				<enable>1</enable>
+				<api_key>z0d4bjeuq4jyqbt9fm3tsyftp8bw8dsg</api_key>
+				<api_url>https://api.example.com</api_url>
+			</general>
+		</order_exporter>
+	</default>
+</config>
