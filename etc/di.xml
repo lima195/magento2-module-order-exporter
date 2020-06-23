@@ -21,4 +21,10 @@
     <!-- Service Contract -->
     <preference for="Lima\OrderExporter\Api\QueueRepositoryInterface" type="Lima\OrderExporter\Model\QueueRepository" />
     <preference for="Lima\OrderExporter\Api\Data\QueueInterface" type="Lima\OrderExporter\Model\Queue" />
+
+    <!-- After Order Save Plugin - Create order export queue -->
+    <type name="Magento\Sales\Api\OrderManagementInterface">
+        <plugin name="after_place_order_operation" type="Lima\OrderExporter\Plugin\OrderManagement"/>
+    </type>
+
 </config>

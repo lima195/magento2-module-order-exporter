@@ -52,7 +52,7 @@ class InstallData implements InstallDataInterface
                 'payload',
                 \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 11222222,
-                ['nullable' => true],
+                ['nullable' => false],
                 'Payload'
             )
             ->addColumn(

@@ -11,6 +11,11 @@ use Lima\OrderExporter\Api\Data\QueueInterface;
  */
 class Queue extends AbstractModel implements QueueInterface
 {
+    /*
+     * mixed
+     */
+    protected $_payload;
+
 	protected function _construct()
 	{
 		$this->_init('Lima\OrderExporter\Model\ResourceModel\Queue');
