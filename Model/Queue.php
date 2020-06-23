@@ -120,7 +120,7 @@ class Queue extends AbstractModel implements QueueInterface
      */
     public function setUpdatedAt($updatedAt)
     {
-        return $this->setData('update_at', $updatedAt);
+        return $this->setData('updated_at', $updatedAt);
     }
 
     /**

@@ -2,7 +2,8 @@
 namespace Lima\OrderExporter\Model;
 
 use Magento\Framework\HTTP\Client\Curl;
-use Lima\OrderExporter\Helper\AbstractData as Helper;
+use Lima\OrderExporter\Helper\Api as Helper;
+use Lima\OrderExporter\Api\Data\QueueInterface;
 
 /**
  * Class Api
@@ -36,20 +37,16 @@ class Api
     }
 
     /**
-     * @param array $queue
+     * @param QueueInterface $queue
      * @return mixed
      */
-    public function export(array $queue)
+    public function export(QueueInterface $queue)
     {
-        die('ok');
-        $url =  $this->_helper->buildCall($filter, self::ENDPOINT_EXPORT_ORDER);
+        $url =  $this->_helper->buildUrl($queue, self::ENDPOINT_EXPORT_ORDER);
 
         $this->_curl->get($url);
 
         $response = json_decode($this->_curl->getBody(), true);
-
-        var_dump($response);
-        die;
 
         return $response;
     }

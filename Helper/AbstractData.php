@@ -59,4 +59,19 @@ class AbstractData extends AbstractHelper
 		return (bool) $this->getConfig(self::CONFIG_GENERAL_GROUP, 'enable');
 	}
 
+    /**
+     * @return string
+     */
+	public function getApiKey()
+	{
+		return (string) $this->getConfig(self::CONFIG_GENERAL_GROUP, 'api_key');
+	}
+
+    /**
+     * @return string
+     */
+	public function getApiUrl()
+    {
+		return (string) $this->getConfig(self::CONFIG_GENERAL_GROUP, 'api_url');
+    }
 }

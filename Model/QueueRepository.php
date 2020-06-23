@@ -8,6 +8,9 @@ use Lima\OrderExporter\Api\Data\QueueSearchResultsInterfaceFactory;
 use Lima\OrderExporter\Api\QueueRepositoryInterface;
 use Lima\OrderExporter\Model\ResourceModel\Queue as QueueResource;
 use Lima\OrderExporter\Model\ResourceModel\Queue\CollectionFactory;
+use Lima\OrderExporter\Model\Api;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use \Psr\Log\LoggerInterface;
 
 /**
  * Class QueueRepository
@@ -36,6 +39,21 @@ class QueueRepository implements QueueRepositoryInterface
     private $searchResultsFactory;
 
     /**
+     * @var \Lima\OrderExporter\Model\Api
+     */
+    private $api;
+
+    /**
+     * @var DateTime
+     */
+    protected $coreDate;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * QueueRepository constructor.
      * @param QueueResource $queueResource
      * @param QueueFactory $queueFactory
@@ -46,13 +64,18 @@ class QueueRepository implements QueueRepositoryInterface
         QueueResource $queueResource,
         QueueFactory $queueFactory,
         CollectionFactory $collectionFactory,
-        QueueSearchResultsInterfaceFactory $searchResultsFactory
-    )
-    {
+        QueueSearchResultsInterfaceFactory $searchResultsFactory,
+        Api $api,
+        DateTime $coreDate,
+        LoggerInterface $logger
+    ) {
         $this->queueResource = $queueResource;
         $this->queueFactory = $queueFactory;
         $this->collectionFactory = $collectionFactory;
         $this->searchResultsFactory = $searchResultsFactory;
+        $this->api = $api;
+        $this->coreDate = $coreDate;
+        $this->logger = $logger;
     }
 
     /**
@@ -129,6 +152,29 @@ class QueueRepository implements QueueRepositoryInterface
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function exportItem(\Lima\OrderExporter\Api\Data\QueueInterface $queue)
+    {
+        $queue = $this->getById($queue->getExportId());
+
+        try {
+            $this->api->export($queue);
+            $queue->setPending(0);
+        } catch (\Exception $e) {
+            $queue->setPending(1);
+            $errorMessage = (string) $e->getMessage();
+            $queue->setErrorLog($errorMessage);
+        }
+
+        $queue->setUpdatedAt($this->coreDate->gmtDate());
+
+        try {
+            $this->save($queue);
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            die;
         }
     }
 

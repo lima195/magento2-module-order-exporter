@@ -3,8 +3,8 @@
 namespace Lima\OrderExporter\Cron;
 
 use \Psr\Log\LoggerInterface;
-use \Lima\OrderExporter\Model\ResourceModel\Queue\CollectionFactory;
-use \Lima\OrderExporter\Model\Queue;
+use Lima\OrderExporter\Model\ResourceModel\Queue\CollectionFactory;
+use Lima\OrderExporter\Api\QueueRepositoryInterface as Queue;
 
 class QueueRun
 {
@@ -50,7 +50,7 @@ class QueueRun
         if($collection){
             foreach ($collection as $key => $item) {
                 $this->logger->info('Exporting Orders: ' . $item->getExportId());
-                $this->queue->item($item);
+                $this->queue->exportItem($item);
             }
         }
     }

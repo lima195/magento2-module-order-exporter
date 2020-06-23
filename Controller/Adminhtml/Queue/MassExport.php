@@ -2,12 +2,12 @@
 
 namespace Lima\OrderExporter\Controller\Adminhtml\Queue;
 
-use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Backend\App\Action\Context;
 use Magento\Ui\Component\MassAction\Filter;
 use Lima\OrderExporter\Model\ResourceModel\Queue\CollectionFactory;
-use Lima\OrderExporter\Model\Queue;
+use Lima\OrderExporter\Api\QueueRepositoryInterface as Queue;
+use \Psr\Log\LoggerInterface;
 
 /**
  * Class MassExport
@@ -28,24 +28,32 @@ class MassExport extends \Magento\Backend\App\Action
     /**
      * @var Queue
      */
-    protected $_order;
+    protected $queue;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * MassExport constructor.
      * @param Context $context
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
-     * @param Queue $order
+     * @param LoggerInterface $logger
+     * @param Queue $queue
      */
     public function __construct(
         Context $context,
         Filter $filter,
         CollectionFactory $collectionFactory,
-        Queue $order
+        LoggerInterface $logger,
+        Queue $queue
     ) {
         $this->_filter = $filter;
-        $this->_order = $order;
         $this->_collectionFactory = $collectionFactory;
+        $this->queue = $queue;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
@@ -64,7 +72,8 @@ class MassExport extends \Magento\Backend\App\Action
         $collectionSize = $collection->getSize();
 
         foreach ($collection as $queueItem) {
-            $this->_order->item($queueItem);
+            $this->logger->info('Exporting Orders: ' . $queueItem->getExportId());
+            $this->queue->exportItem($queueItem);
         }
 
         $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been exported.', $collectionSize));

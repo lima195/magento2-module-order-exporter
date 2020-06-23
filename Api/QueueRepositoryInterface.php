@@ -34,4 +34,10 @@ interface QueueRepositoryInterface
      * @return mixed
      */
     public function getList(SearchCriteriaInterface $searchCriteria);
+
+    /**
+     * @param QueueInterface $queue
+     * @return mixed
+     */
+    public function exportItem(QueueInterface $queue);
 }
