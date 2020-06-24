@@ -11,7 +11,7 @@ use Lima\OrderExporter\Api\Data\QueueInterface;
  */
 class Api
 {
-    const ENDPOINT_EXPORT_ORDER = 'order';
+    const ENDPOINT_EXPORT_ORDER = '/webhook/sales';
 
     /**
      * @var Curl
@@ -42,9 +42,10 @@ class Api
      */
     public function export(QueueInterface $queue)
     {
-        $url =  $this->_helper->buildUrl($queue, self::ENDPOINT_EXPORT_ORDER);
-
-        $this->_curl->get($url);
+        $url =  $this->_helper->buildUrl(self::ENDPOINT_EXPORT_ORDER);
+        $headers = ["Content-Type" => "application/json", "Authorization" => $this->_helper->getBearerAuth()];
+        $this->_curl->setHeaders($headers);
+        $this->_curl->post($url, $queue->getPayload());
 
         $response = json_decode($this->_curl->getBody(), true);
 

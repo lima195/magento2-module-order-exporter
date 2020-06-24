@@ -6,6 +6,7 @@
                 <resource id="Lima_OrderExporter::order_exporter" title="Order Exporter" sortOrder="10">
                     <resource id="Lima_OrderExporter::queue" title="Queue" sortOrder="100"/>
                     <resource id="Lima_OrderExporter::configuration" title="Configuration" sortOrder="200"/>
+                    <resource id="Lima_OrderExporter::webook_sales" title="Configuration" sortOrder="250"/>
                 </resource>
             </resource>
         </resources>

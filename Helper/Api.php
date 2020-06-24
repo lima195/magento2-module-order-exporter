@@ -11,14 +11,17 @@ use Lima\OrderExporter\Api\Data\QueueInterface;
 class Api extends AbstractData
 {
     /**
-     * @param QueueInterface $queue
      * @param string $endpoint
      * @return string
      */
-    public function buildUrl(QueueInterface $queue, string $endpoint)
+    public function buildUrl(string $endpoint)
     {
-        $url = $this->getApiUrl() . '/' . $endpoint;
+        return $this->getApiUrl() . $endpoint;
+    }
 
-        return $url;
+    public function getBearerAuth()
+    {
+        $token = $this->getApiKey();
+        return "Bearer {$token}";
     }
 }

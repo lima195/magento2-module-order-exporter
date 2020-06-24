@@ -157,15 +157,27 @@ class QueueRepository implements QueueRepositoryInterface
 
     public function exportItem(\Lima\OrderExporter\Api\Data\QueueInterface $queue)
     {
+        $success = true;
         $queue = $this->getById($queue->getExportId());
 
         try {
-            $this->api->export($queue);
-            $queue->setPending(0);
+            $result = $this->api->export($queue);
+            if($result === true) {
+                $queue->setPending(0);
+                $queue->setErrorLog(null);
+            }
         } catch (\Exception $e) {
-            $queue->setPending(1);
             $errorMessage = (string) $e->getMessage();
+            $queue->setPending(1);
             $queue->setErrorLog($errorMessage);
+            $this->logger->error('Error Message', ['exception' => $e->getMessage()]);
+            $success = false;
+        }
+
+        if($result !== true) {
+            $queue->setErrorLog(json_encode($result));
+            $success = false;
+            $this->logger->error('Order has not been exported', ['exception' => json_encode($result), 'order_exporter_queue_id' => $queue->getExportId()]);
         }
 
         $queue->setUpdatedAt($this->coreDate->gmtDate());
@@ -173,9 +185,11 @@ class QueueRepository implements QueueRepositoryInterface
         try {
             $this->save($queue);
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            die;
+             $this->logger->error('Error Message', ['exception' => $e->getMessage()]);
+             $success = false;
         }
+
+        return $success;
     }
 
     /**

@@ -1,0 +1,8 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route method="POST" url="/V1/webhook/sales">
+		<service class="Lima\OrderExporter\Api\SalesInterface" method="processOrder"/>
+		<resources>
+			<resource ref="Lima_OrderExporter::webook_sales"/>
+		</resources>
+	</route>
+</routes>

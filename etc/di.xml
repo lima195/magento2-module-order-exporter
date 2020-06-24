@@ -15,9 +15,6 @@
 		</arguments>
 	</virtualType>
 
-	<!-- Queue Api -->
-	<preference for="Lima\OrderExporter\Api\QueueManagementInterface" type="Lima\OrderExporter\Model\QueueManagement"/>
-
     <!-- Service Contract -->
     <preference for="Lima\OrderExporter\Api\QueueRepositoryInterface" type="Lima\OrderExporter\Model\QueueRepository" />
     <preference for="Lima\OrderExporter\Api\Data\QueueInterface" type="Lima\OrderExporter\Model\Queue" />
@@ -27,4 +24,6 @@
         <plugin name="after_place_order_operation" type="Lima\OrderExporter\Plugin\OrderManagement"/>
     </type>
 
+    <!-- orderexporter/sales api -->
+    <preference for="Lima\OrderExporter\Api\SalesInterface" type="Lima\OrderExporter\Model\Sales"/>
 </config>

@@ -70,13 +70,21 @@ class MassExport extends \Magento\Backend\App\Action
 
         $collection = $this->_filter->getCollection($this->_collectionFactory->create());
         $collectionSize = $collection->getSize();
+        $successExported = 0;
 
         foreach ($collection as $queueItem) {
             $this->logger->info('Exporting Orders: ' . $queueItem->getExportId());
-            $this->queue->exportItem($queueItem);
+            $result = $this->queue->exportItem($queueItem);
+            if($result) {
+                $successExported++;
+            }
         }
 
-        $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been exported.', $collectionSize));
+        if($successExported) {
+            $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been exported.', $successExported));
+        }
+
+        $this->messageManager->addErrorMessage(__('A total of %1 record(s) have not been exported.', ($collectionSize - $successExported)));
 
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
