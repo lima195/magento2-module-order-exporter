@@ -17,11 +17,24 @@ class Exporter extends \Lima\OrderExporter\Helper\AbstractData
      */
     protected $ibgeCollectionFactory;
 
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * Exporter constructor.
+     * @param ScopeConfigInterface $scopeConfig
+     * @param IbgeCollectionFactory $ibgeCollectionFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        IbgeCollectionFactory $ibgeCollectionFactory
+        IbgeCollectionFactory $ibgeCollectionFactory,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->ibgeCollectionFactory  = $ibgeCollectionFactory;
+        $this->logger = $logger;
         parent::__construct($scopeConfig);
     }
 
@@ -40,9 +53,6 @@ class Exporter extends \Lima\OrderExporter\Helper\AbstractData
                 "items" => $this->_getItemsData($order),
                 "shipping_method" => $order->getShippingMethod(),
                 "payment_method" => $order->getPayment()->getMethod(),
-                /**
-                 * TODO - CHECK INSTALLMENTS
-                 */
                 "payment_installments" => $order->getPayment()->getAdditionalData(),
                 "subtotal" => $order->getSubtotal(),
                 "shipping_amount" => $order->getShippingAmount(),
@@ -65,9 +75,6 @@ class Exporter extends \Lima\OrderExporter\Helper\AbstractData
         $data = [
             "name" => $order->getCustomerFirstname() . ' ' . $order->getCustomerLastname(),
             "cpf_cnpj" => $order->getCustomerTaxvat(),
-            /**
-             * TODO - FORMAT TELEPHONE AND ADD ADMIN OPTION FOR CHOOSE TO GET THIS VALUE FROM ADDRESS OR CUSTOMER
-             */
             "telephone" => $address->getTelephone(),
             "dob" => $this->_threatDate($order->getCustomerDob()),
         ];
@@ -77,9 +84,9 @@ class Exporter extends \Lima\OrderExporter\Helper\AbstractData
              * TODO - IMPLEMENT PJ FUNCTIONALITIES
              */
             $data['cnpj'] = $order->getCustomerTaxvat();
-            $data['razao_social'] = 'sfasfa';
-            $data['nome_fantasia'] = 'test';
-            $data['ie'] = "00000000";
+            $data['razao_social'] = $order->getCustomerName();
+            $data['nome_fantasia'] = $order->getCustomerName();
+            $data['ie'] = $order->getCustomerTaxvat();
         }
 
         return $data;
@@ -199,9 +206,7 @@ class Exporter extends \Lima\OrderExporter\Helper\AbstractData
                 $loadDate = \DateTime::createFromFormat("Y-m-d H:i:s", $date);
                 $newDate = $loadDate->format($this->getDateFormat());
             } catch (\Exception $e) {
-                /**
-                 * TODO - LOGGER ERROR
-                 */
+                $this->logger->critical('Error message', ['exception' => $e]);
             }
         }
 
