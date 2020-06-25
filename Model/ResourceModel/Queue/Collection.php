@@ -2,9 +2,6 @@
 
 namespace Lima\OrderExporter\Model\ResourceModel\Queue;
 
-/**
- *
- */
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**

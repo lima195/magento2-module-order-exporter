@@ -241,4 +241,12 @@ class AbstractData extends AbstractHelper
     {
         return (bool) $this->getConfig(self::CONFIG_APIFIELDSCONFIG_GROUP, 'send_ibge_city_code');
     }
+
+    /**
+     * @return bool
+     */
+    public function getUseIbgeCityCodeComplete()
+    {
+        return (bool) $this->getConfig(self::CONFIG_APIFIELDSCONFIG_GROUP, 'use_ibge_city_code_complete');
+    }
 }

@@ -13,6 +13,7 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 class InstallData implements InstallDataInterface
 {
     const ORDER_QUEUE_TABLE = 'order_exporter_queue';
+    const IBGE_CITY_CODE_TABLE = 'ibge_city_code';
 
     /**
      * @param ModuleDataSetupInterface $setup
@@ -24,6 +25,9 @@ class InstallData implements InstallDataInterface
 		/**
 		 * Create table 'order_exporter_queue'
 		*/
+
+		$salesOrderTable = $setup->getTable('sales_order');
+
 		$table = $setup->getConnection()
 			->newTable($setup->getTable(self::ORDER_QUEUE_TABLE))
 			->addColumn(
@@ -90,9 +94,76 @@ class InstallData implements InstallDataInterface
 				],
                 'Is Pending'
             )
+            ->addForeignKey(
+                self::ORDER_QUEUE_TABLE . '_order',
+                'order_id',
+                $salesOrderTable,
+                'entity_id',
+               \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+            )
 			->setComment("Order Exporter Queue");
 
 		$setup->getConnection()->createTable($table);
+
+        /**
+         * Create table 'ibge_city_codes'
+         */
+
+        $table = $setup->getConnection()
+            ->newTable($setup->getTable(self::IBGE_CITY_CODE_TABLE))
+            ->addColumn(
+                'entity_id',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                [
+                    'identity' => true,
+                    'unsigned' => true,
+                    'nullable' => false,
+                    'primary' => true
+                ],
+                'Entity ID'
+            )
+            ->addColumn(
+                'uf',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                [
+                    'unsigned' => true,
+                    'nullable' => false
+                ],
+                'UF'
+            )
+            ->addColumn(
+                'uf_name',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                250,
+                ['nullable' => false],
+                'UF Name'
+            )
+            ->addColumn(
+                'city_code',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                6,
+                ['nullable' => false],
+                'City Code'
+            )
+            ->addColumn(
+                'city_code_complete',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                10,
+                ['nullable' => false],
+                'City Code Complete'
+            )
+            ->addColumn(
+                'city_name',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                250,
+                ['nullable' => false],
+                'City Name'
+            )
+            ->setComment("IBGE City Code");
+
+        $setup->getConnection()->createTable($table);
 
 		$setup->endSetup();
 	}

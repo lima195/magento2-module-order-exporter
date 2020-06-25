@@ -11,6 +11,7 @@
             <api_fields_config>
                 <date_format>d/m/Y</date_format>
                 <send_ibge_city_code>1</send_ibge_city_code>
+                <use_ibge_city_code_complete>0</use_ibge_city_code_complete>
             </api_fields_config>
             <attribute_mapper>
                 <type_cpf>customer</type_cpf>

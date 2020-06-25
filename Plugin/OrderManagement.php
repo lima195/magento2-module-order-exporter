@@ -29,9 +29,14 @@ class OrderManagement
      */
     protected $exporterHelper;
 
+
+
     /**
      * OrderManagement constructor.
+     * @param QueueInterface $queue
      * @param QueueRepositoryInterface $queueRepository
+     * @param ExporterHelper $exporterHelper
+     * @param IbgeCollectionFactory $ibgeCollectionFactory
      */
     public function __construct(
         QueueInterface $queue,
@@ -41,6 +46,7 @@ class OrderManagement
         $this->queueRepository  = $queueRepository;
         $this->queue  = $queue;
         $this->exporterHelper  = $exporterHelper;
+
     }
 
     /**
@@ -57,7 +63,6 @@ class OrderManagement
             $payload = $this->exporterHelper->getPayloadByOrder($order);
         	$queue = $this->queue->setOrderId($order->getEntityId())
                 ->setPayload(json_encode($payload))
-        	    ->setErrorLog('ok')
                 ->setPending(1);
 
             try {

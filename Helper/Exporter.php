@@ -1,15 +1,30 @@
 <?php
 namespace Lima\OrderExporter\Helper;
 
-use Lima\OrderExporter\Helper\AbstractData;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Lima\OrderExporter\Model\ResourceModel\IbgeCityCode\CollectionFactory as IbgeCollectionFactory;
 
 /**
  * Class AbstractData
  * @package Lima\OrderExporter\Helper
  */
-class Exporter extends AbstractData
+class Exporter extends \Lima\OrderExporter\Helper\AbstractData
 {
+
+    /**
+     * @var IbgeCollectionFactory
+     */
+    protected $ibgeCollectionFactory;
+
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        IbgeCollectionFactory $ibgeCollectionFactory
+    ) {
+        $this->ibgeCollectionFactory  = $ibgeCollectionFactory;
+        parent::__construct($scopeConfig);
+    }
+
     /**
      * @param OrderInterface $order
      * @return array
@@ -90,11 +105,20 @@ class Exporter extends AbstractData
                 "country" => $address->getCountryId()
             ];
 
-            /**
-             * TODO - IMPORT IBGE DATA TO GET THIS CORRECT VALUE
-             */
             if($this->getIsIbgeCodeEnabled()) {
-                $data["city_ibge_code"] = $address->getRegionId();
+
+                $collection = $this->ibgeCollectionFactory->create();
+                $ibgeCity = $collection->addFieldToFilter('city_name', ['eq' => $address->getCity()])
+                                ->addFieldToFilter('uf_name', ['eq' => $address->getRegion()])
+                                ->getFirstItem();
+
+                $ibgeValue = $address->getRegionId();
+
+                if(!empty($ibgeCity->getCityCodeComplete()) || !empty($ibgeCity->getCityCode())) {
+                    $ibgeValue = $this->getUseIbgeCityCodeComplete() ? $ibgeCity->getCityCodeComplete() : $ibgeCity->getCityCode();
+                }
+
+                $data["city_ibge_code"] = $ibgeValue;
             }
         }
 

@@ -25,16 +25,24 @@ class Api
     protected $_helper;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * Api constructor.
      * @param Curl $curl
      * @param Helper $helper
+     * @param \Psr\Log\LoggerInterface $logger
      */
 	public function __construct(
         Curl $curl,
-        Helper $helper
+        Helper $helper,
+        \Psr\Log\LoggerInterface $logger
     ) {
 		$this->_curl = $curl;
         $this->_helper = $helper;
+        $this->_logger = $logger;
     }
 
     /**
@@ -56,11 +64,7 @@ class Api
         try {
             $this->_curl->post($url, $payload);
         } catch (\Exception $e) {
-            /**
-             * TODO - Make a good execptiongit
-             */
-            var_dump($e->getMessage());
-            die;
+            $this->_logger->critical('Error message', ['exception' => $e->getMessage()]);
         }
 
         $response = json_decode($this->_curl->getBody(), true);
