@@ -54,10 +54,7 @@ class Exporter extends AbstractData
              * TODO - FORMAT TELEPHONE AND ADD ADMIN OPTION FOR CHOOSE TO GET THIS VALUE FROM ADDRESS OR CUSTOMER
              */
             "telephone" => $address->getTelephone(),
-            /**
-             * TODO - REMOVE DOB TIME
-             */
-            "dob" => $order->getCustomerDob()
+            "dob" => $this->_threatDate($order->getCustomerDob()),
         ];
 
         if(strlen(preg_replace('/[^A-Za-z0-9\-]/', '', $order->getCustomerTaxvat())) >= 13) {
@@ -84,24 +81,21 @@ class Exporter extends AbstractData
 
         if($address->getId()){
             $data = [
-                /**
-                 * TODO - ADMIN OPTION TO MAPPER ADDRESSES
-                 */
-                "street" => $address->getStreet()[0],
-                "number" => $address->getStreet()[1],
-                "additional" => $address->getStreet()[3],
-                "neighborhood" => $address->getStreet()[2],
+                "street" => $address->getStreet()[$this->getStreetLogradouro()],
+                "number" => $address->getStreet()[$this->getStreetNumber()],
+                "additional" => $address->getStreet()[$this->getStreetComplement()],
+                "neighborhood" => $address->getStreet()[$this->getStreetDistrict()],
                 "city" =>  $address->getCity(),
-                /**
-                 * TODO - IMPORT IBGE DATA TO GET THIS CORRECT VALUE
-                 */
-                "city_ibge_code" => $address->getRegionId(),
-                /**
-                 * TODO - FORMAT UF TO 2 LETTERS PATTERN
-                 */
-                "uf" => $address->getRegion(),
+                "uf" => $this->_getBrazilianStates($address->getRegion()),
                 "country" => $address->getCountryId()
             ];
+
+            /**
+             * TODO - IMPORT IBGE DATA TO GET THIS CORRECT VALUE
+             */
+            if($this->getIsIbgeCodeEnabled()) {
+                $data["city_ibge_code"] = $address->getRegionId();
+            }
         }
 
         return $data;
@@ -129,5 +123,64 @@ class Exporter extends AbstractData
         }
 
         return $data;
+    }
+
+    /**
+     * @param null $state
+     * @return string|string[]
+     */
+    protected function _getBrazilianStates($state = null)
+    {
+        $states = [
+            "Acre" => "AC",
+            "Alagoas" => "AL",
+            "Amapá" => "AP",
+            "Amazonas" => "AM",
+            "Bahia" => "BA",
+            "Ceará" => "CE",
+            "Distrito Federal" => "DF",
+            "Espírito Santo" => "ES",
+            "Goiás" => "GO",
+            "Maranhão" => "MA",
+            "Mato Grosso" => "MT",
+            "Mato Grosso do Sul" => "MS",
+            "Minas Gerais" => "MG",
+            "Pará" => "PA",
+            "Paraíba" => "PB",
+            "Paraná" => "PR",
+            "Pernambuco" => "PE",
+            "Piauí" => "PI",
+            "Rio de Janeiro" => "RJ",
+            "Rio Grande do Norte" => "RN",
+            "Rio Grande do Sul" => "RS",
+            "Rondônia" => "RO",
+            "Roraima" => "RR",
+            "Santa Catarina" => "SC",
+            "São Paulo" => "SP",
+            "Sergipe" => "SE",
+            "Tocantins" => "TO"
+        ];
+
+        if($state) {
+            return $states[$state] ? $states[$state] : $state;
+        }
+
+        return $states;
+    }
+
+    function _threatDate($date = null)
+    {
+        if($date) {
+            try {
+                $loadDate = \DateTime::createFromFormat("Y-m-d H:i:s", $date);
+                $newDate = $loadDate->format($this->getDateFormat());
+            } catch (\Exception $e) {
+                /**
+                 * TODO - LOGGER ERROR
+                 */
+            }
+        }
+
+        return !empty($newDate) ? (string) $newDate : (string) $date;
     }
 }

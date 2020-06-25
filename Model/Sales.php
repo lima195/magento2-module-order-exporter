@@ -18,7 +18,9 @@ class Sales implements SalesInterface
 	public function processOrder($orderData)
 	{
 	    $error = [];
-	    $orderData = $orderData[0];
+	    if(isset($orderData[0])) {
+	        $orderData = $orderData[0];
+        }
 
 	    // Check customer data
         $this->_checkStringNotNullValue('name', $orderData['customer'], $error);

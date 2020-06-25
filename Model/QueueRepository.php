@@ -174,10 +174,12 @@ class QueueRepository implements QueueRepositoryInterface
             $success = false;
         }
 
-        if($result !== true) {
-            $queue->setErrorLog(json_encode($result));
+        if(!isset($result) || $result !== true) {
+            if(isset($result)) {
+                $queue->setErrorLog(json_encode($result));
+                $this->logger->error('Order has not been exported', ['exception' => json_encode($result), 'order_exporter_queue_id' => $queue->getExportId()]);
+            }
             $success = false;
-            $this->logger->error('Order has not been exported', ['exception' => json_encode($result), 'order_exporter_queue_id' => $queue->getExportId()]);
         }
 
         $queue->setUpdatedAt($this->coreDate->gmtDate());

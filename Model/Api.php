@@ -12,6 +12,7 @@ use Lima\OrderExporter\Api\Data\QueueInterface;
 class Api
 {
     const ENDPOINT_EXPORT_ORDER = '/webhook/sales';
+    const INTERNAL_API_KEY_ARRAY = 'order_data';
 
     /**
      * @var Curl
@@ -45,7 +46,22 @@ class Api
         $url =  $this->_helper->buildUrl(self::ENDPOINT_EXPORT_ORDER);
         $headers = ["Content-Type" => "application/json", "Authorization" => $this->_helper->getBearerAuth()];
         $this->_curl->setHeaders($headers);
-        $this->_curl->post($url, $queue->getPayload());
+        $payload = $queue->getPayload();
+
+        if($this->_helper->getIsTest()) {
+            $payloadArray = json_decode($payload);
+            $payload = json_encode([self::INTERNAL_API_KEY_ARRAY => $payloadArray]);
+        }
+
+        try {
+            $this->_curl->post($url, $payload);
+        } catch (\Exception $e) {
+            /**
+             * TODO - Make a good execptiongit
+             */
+            var_dump($e->getMessage());
+            die;
+        }
 
         $response = json_decode($this->_curl->getBody(), true);
 

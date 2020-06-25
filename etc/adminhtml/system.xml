@@ -23,7 +23,96 @@
 					<label>Api Url</label>
 					<comment>Example: https://api.example.com</comment>
 				</field>
+                <field id="internal_api_test" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Internal Api Test Validator</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>This will send request to this.website/webook/sales (This will put the payload inside a array and validate all items of payload)</comment>
+				</field>
 			</group>
+            <group id="api_fields_config" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>API Fields Config</label>
+                <field id="date_format" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Date Format</label>
+                    <comment>Example: d/m/Y  (Brazilian Date Format)</comment>
+                </field>
+                <field id="send_ibge_city_code" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Send IBGE city code</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="attribute_mapper" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Attribute Mapper</label>
+                <field id="type_cpf" translate="label select" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The CPF will be an attribute obtained from the</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\TypeCPF</source_model>
+                </field>
+                <field id="cpf_by_address" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The CPF attribute is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\AddressMap</source_model>
+                    <depends>
+                        <field id="order_exporter/attribute_mapper/type_cpf">address</field>
+                    </depends>
+                </field>
+                <field id="cpf_by_customer" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The CPF attribute is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\CustomerMap</source_model>
+                    <depends>
+                        <field id="order_exporter/attribute_mapper/type_cpf">customer</field>
+                    </depends>
+                </field>
+                <field id="type_cnpj" translate="label select" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The attribute CNPJ will be obtained from the</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\TypeCNPJ</source_model>
+                </field>
+                <field id="cnpj_by_address" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The CNPJ attribute is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\AddressMap</source_model>
+                    <depends>
+                        <field id="order_exporter/attribute_mapper/type_cnpj">use_address</field>
+                    </depends>
+                </field>
+                <field id="cnpj_by_customer" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The CNPJ attribute is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\CustomerMap</source_model>
+                    <depends>
+                        <field id="order_exporter/attribute_mapper/type_cnpj">use_customer</field>
+                    </depends>
+                </field>
+                <field id="type_name_company" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The attribute Company Name will be obtained from the</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\TypeNameCompany</source_model>
+                </field>
+                <field id="company_name_address" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The Company Name attribute is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\AddressMap</source_model>
+                    <depends>
+                        <field id="order_exporter/attribute_mapper/type_name_company">address</field>
+                    </depends>
+                </field>
+                <field id="company_name_customer" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The Company Name attribute is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\AddressMap</source_model>
+                    <depends>
+                        <field id="order_exporter/attribute_mapper/type_name_company">customer</field>
+                    </depends>
+                </field>
+                <field id="street_logradouro" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The Street attribute is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\Street</source_model>
+                </field>
+                <field id="street_number" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The address number is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\Street</source_model>
+                </field>
+                <field id="street_complement" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The address complement is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\Street</source_model>
+                </field>
+                <field id="street_district" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>The address district is</label>
+                    <source_model>Lima\OrderExporter\Block\Adminhtml\System\Config\Street</source_model>
+                </field>
+            </group>
 		</section>
 	</system>
 </config>

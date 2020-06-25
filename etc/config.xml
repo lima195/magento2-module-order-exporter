@@ -6,7 +6,27 @@
 				<enable>1</enable>
 				<api_key>z0d4bjeuq4jyqbt9fm3tsyftp8bw8dsg</api_key>
 				<api_url>https://api.example.com</api_url>
+				<internal_api_test>1</internal_api_test>
 			</general>
+            <api_fields_config>
+                <date_format>d/m/Y</date_format>
+                <send_ibge_city_code>1</send_ibge_city_code>
+            </api_fields_config>
+            <attribute_mapper>
+                <type_cpf>customer</type_cpf>
+                <cpf_by_address></cpf_by_address>
+                <cpf_by_customer>taxvat</cpf_by_customer>
+                <type_cnpj>use_cpf</type_cnpj>
+                <cnpj_by_address></cnpj_by_address>
+                <cnpj_by_customer></cnpj_by_customer>
+                <type_name_company>customer</type_name_company>
+                <company_name_address></company_name_address>
+                <company_name_customer>company</company_name_customer>
+                <street_logradouro>0</street_logradouro>
+                <street_number>1</street_number>
+                <street_complement>2</street_complement>
+                <street_district>3</street_district>
+            </attribute_mapper>
 		</order_exporter>
 	</default>
 </config>

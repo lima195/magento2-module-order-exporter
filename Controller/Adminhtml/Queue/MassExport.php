@@ -80,11 +80,15 @@ class MassExport extends \Magento\Backend\App\Action
             }
         }
 
+        $failsExported = $collectionSize - $successExported;
+
         if($successExported) {
             $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been exported.', $successExported));
         }
 
-        $this->messageManager->addErrorMessage(__('A total of %1 record(s) have not been exported.', ($collectionSize - $successExported)));
+        if($failsExported) {
+            $this->messageManager->addErrorMessage(__('A total of %1 record(s) have not been exported.', $failsExported));
+        }
 
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
